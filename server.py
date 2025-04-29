@@ -9,4 +9,4 @@ class Handler(BaseHTTPRequestHandler):
         return  # disable logging to keep it minimal
 
 if __name__ == "__main__":
-    HTTPServer(("", 8080), Handler).serve_forever()
+    HTTPServer(("0.0.0.0", 8080), Handler).serve_forever()
