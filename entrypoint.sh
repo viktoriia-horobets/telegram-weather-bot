@@ -1,4 +1,4 @@
 #!/bin/sh
-python ./server.py &
-echo "Server started"
-python ./bot.py
+python ./bot.py &
+echo "Starting server"
+python ./server.py
