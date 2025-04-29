@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: telegram-weather-bot
+  labels:
+    app: telegram-weather-bot
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: telegram-weather-bot
+  template:
+    metadata:
+      labels:
+        app: telegram-weather-bot
+    spec:
+      containers:
+      - name: telegram-weather-bot
+        image: viktoriiaa/telegram-weather-bot:latest
+        env:
+        - name: TELEGRAM_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: telegram-bot-secrets
+              key: TELEGRAM_TOKEN
+        - name: WEATHER_API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: telegram-bot-secrets
+              key: WEATHER_API_KEY
