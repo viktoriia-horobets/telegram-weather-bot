@@ -10,4 +10,7 @@ COPY . .
 
 ENV PYTHONUNBUFFERED=1
 
-CMD ["python", "bot.py"]
+EXPOSE 8080
+
+CMD ["sh", "entrypoint.sh"]
+
