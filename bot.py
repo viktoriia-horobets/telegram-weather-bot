@@ -1,6 +1,7 @@
 import os
 import requests
 import logging
+from datetime import datetime
 from telegram import Update
 from telegram.ext import ApplicationBuilder, CommandHandler, ContextTypes
 from dotenv import load_dotenv
@@ -12,7 +13,6 @@ logging.basicConfig(
     level=logging.INFO,
     force=True
 )
-
 
 TELEGRAM_TOKEN = os.getenv("TELEGRAM_TOKEN")
 WEATHER_API_KEY = os.getenv("WEATHER_API_KEY")
@@ -34,19 +34,23 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
         "Привіт! 👋 Я бот погоди. Надішли мені /weather <місто> і я скажу тобі прогноз!"
     )
 
-
 async def weather(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     if not context.args:
         await update.message.reply_text("Будь ласка, введи місто після команди /weather.")
         return
     city_name = " ".join(context.args)
-    logging.info(f"User {update.effective_user.id} requested weather for {city_name}.")
+    user = update.effective_user
+    logging.info(f"User {user.id} requested weather for {city_name}.")
+
+    with open("logs.txt", "a", encoding="utf-8") as log_file:
+        log_file.write(
+            f"{datetime.now()} - User: {user.username or 'anonymous'} ({user.id}) requested weather for {city_name}\n"
+        )
+
     weather_info = get_weather(city_name)
     await update.message.reply_text(weather_info)
 
-
 app = ApplicationBuilder().token(TELEGRAM_TOKEN).build()
-
 app.add_handler(CommandHandler("start", start))
 app.add_handler(CommandHandler("weather", weather))
 
